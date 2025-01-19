@@ -3,16 +3,6 @@ const Review = require('./models/review');
 const ExpressError = require('./utils/ExpressError');
 const {campgroundSchema, reviewSchema} = require('./schemas');
 
-module.exports.validateReview = (req, res, next) => {
-    const {error} = reviewSchema.validate(req.body);
-    if(error){
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400);
-    } else{
-        next();
-    }
-}
-
 module.exports.isLoggedIn = (req, res, next) => {
     if(!req.isAuthenticated()){
         req.session.returnTo = req.originalUrl;
@@ -65,3 +55,13 @@ module.exports.isReviewAuthor = async(req, res, next) => {
     }
     next();
 };
+
+module.exports.validateReview = (req, res, next) => {
+    const {error} = reviewSchema.validate(req.body);
+    if(error){
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400);
+    } else{
+        next();
+    }
+}
